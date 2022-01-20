@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: SHARK visit ID log
+  description: Get/Post ID from/to log (PostGIS database)
+tags:
+- name: sharkids
+paths:
+  /getid:
+    get:
+      operationId: app.get_id
+      tags:
+      - sharkids
+      description: Return a json with year_id as string
+      parameters:
+        - $ref: '#/components/parameters/timestamp'
+        - $ref: '#/components/parameters/longi'
+        - $ref: '#/components/parameters/latit'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SharkId'
+        404:
+          description: Not found
+components:
+  schemas:
+    SharkId:
+      type: object
+  parameters:
+    timestamp:
+      in: query
+      name: timestamp
+      schema:
+        type: string
+    longi:
+      in: query
+      name: longi
+      schema:
+        type: number
+    latit:
+      in: query
+      name: latit
+      schema:
+        type: number

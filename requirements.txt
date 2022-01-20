@@ -1,0 +1,8 @@
+connexion[swagger-ui]~=2.7.0
+Flask
+shapely
+pandas
+geopandas
+sqlalchemy
+geoalchemy2
+requests
