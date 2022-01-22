@@ -19,25 +19,46 @@ def get_connection():
     )
 
 
+TS_FMT = '%Y-%m-%d %H:%M:%S'
+TIME_DELTA = pd.Timedelta(hours=6)
+
+
+def get_start_end_timestamps(ts):
+    """Doc."""
+    if ts.endswith(' 00:00:00'):
+        ts = pd.Timestamp(ts)
+        return (ts - TIME_DELTA).strftime(TS_FMT), \
+               (ts + pd.Timedelta(hours=23, minutes=59)).strftime(TS_FMT)
+    else:
+        ts = pd.Timestamp(ts)
+        return (ts - TIME_DELTA).strftime(TS_FMT), \
+               (ts + TIME_DELTA).strftime(TS_FMT)
+
+
 class DbHandler:
     """PostGIS database handler."""
 
-    _search_query = """select * from ids where DATE(timestamp) = {}"""
+    _query_date = """select * from ids where DATE(timestamp) = {}"""
+    _query_window = """
+    select * from ids where timestamp between {start} and {end}
+    """
 
     def __init__(self):
         self.engine = get_connection()
 
-    def get_id(self, date=None, longi=None, latit=None):
+    def get_id(self, timestamp=None, longi=None, latit=None):
         """Doc."""
-        date = pd.Timestamp(date).strftime('%Y-%m-%d')
+        # date = pd.Timestamp(timestamp).strftime('%Y-%m-%d')
+        start, end = get_start_end_timestamps(timestamp)
         gdf = gp.read_postgis(
-            self._search_query.format("""'{}'""".format(date)),
+            # self._query_date.format("""'{}'""".format(date)),
+            self._query_window.format(start="""'{}'""".format(start),
+                                      end="""'{}'""".format(end)),
             self.engine,
             geom_col='geometry'
         )
-
-        p = Point(longi, latit)
-        point_frame = gdf.loc[gdf.contains(p), 'year_id']
+        boolean = gdf.contains(Point(longi, latit))
+        point_frame = gdf.loc[boolean, 'year_id']
 
         if len(point_frame.index) == 1:
             return {'id': point_frame.iloc[0]}
@@ -50,3 +71,12 @@ class DbHandler:
     def post_id(self):
         """Doc."""
         raise NotImplementedError
+
+
+if __name__ == "__main__":
+    db = DbHandler()
+    ids = db.get_id(
+        timestamp='2022-01-20 12:10:10',
+        longi=58.22,
+        latit=15.4
+    )

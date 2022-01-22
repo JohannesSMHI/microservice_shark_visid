@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# Copyright (c) 2022 SMHI, Swedish Meteorological and Hydrological Institute.
+# License: MIT License (see LICENSE.txt or http://opensource.org/licenses/mit).
 """
 Microservice Template: https://github.com/sharksmhi/microservice_template
 
@@ -29,7 +32,7 @@ db = DbHandler()
 def get_id(*args, timestamp=None, longi=None, latit=None, **kwargs):
     """Get function."""
     return db.get_id(
-        date=timestamp,
+        timestamp=timestamp,
         longi=longi,
         latit=latit
     )
