@@ -44,7 +44,9 @@ class DbHandler:
     """
 
     def __init__(self):
+        start_time = time.time()
         self.engine = get_connection()
+        print("Timeit:--%.5f sec" % (time.time() - start_time))
 
     def get_id(self, timestamp=None, longi=None, latit=None):
         """Doc."""
@@ -74,6 +76,8 @@ class DbHandler:
 
 
 if __name__ == "__main__":
+    import time
+
     db = DbHandler()
     ids = db.get_id(
         timestamp='2022-01-20 12:10:10',
