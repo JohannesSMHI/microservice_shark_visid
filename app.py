@@ -23,18 +23,26 @@ Examples:
     localhost:5000/getid?timestamp=2020-03-10&longi=11.54667&latit=58.32333
 
 """
+from pathlib import Path
 import connexion
 from log import DbHandler
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=Path(__file__).parent.joinpath('.env'))
 
 db = DbHandler()
 
 
-def get_id(*args, timestamp=None, longi=None, latit=None, **kwargs):
+def get_id(*args, timestamp=None, shipc=None, east=None, north=None,
+           lon_dd=None, lat_dd=None, **kwargs):
     """Get function."""
     return db.get_id(
         timestamp=timestamp,
-        longi=longi,
-        latit=latit
+        shipc=shipc,
+        east=east,
+        north=north,
+        lon_dd=lon_dd,
+        lat_dd=lat_dd
     )
 
 

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   version: 1.0.0
   title: SHARK visit ID log
-  description: Get/Post ID from/to log (PostGIS database)
+  description: Get/Post ID from/to log (PostGIS/SQLite database)
 tags:
 - name: sharkids
 paths:
@@ -14,8 +14,11 @@ paths:
       description: Return a json with year_id as string
       parameters:
         - $ref: '#/components/parameters/timestamp'
-        - $ref: '#/components/parameters/longi'
-        - $ref: '#/components/parameters/latit'
+        - $ref: '#/components/parameters/shipc'
+        - $ref: '#/components/parameters/east'
+        - $ref: '#/components/parameters/north'
+        - $ref: '#/components/parameters/lon_dd'
+        - $ref: '#/components/parameters/lat_dd'
       responses:
         200:
           description: Successful operation
@@ -37,13 +40,28 @@ components:
       name: timestamp
       schema:
         type: string
-    longi:
+    shipc:
       in: query
-      name: longi
+      name: shipc
+      schema:
+        type: string
+    east:
+      in: query
+      name: east
       schema:
         type: number
-    latit:
+    north:
       in: query
-      name: latit
+      name: north
+      schema:
+        type: number
+    lon_dd:
+      in: query
+      name: lon_dd
+      schema:
+        type: number
+    lat_dd:
+      in: query
+      name: lat_dd
       schema:
         type: number
