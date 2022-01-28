@@ -37,12 +37,8 @@ Example:
     )
 
 """
-from pathlib import Path
 import connexion
 from log import DbHandler
-from dotenv import load_dotenv
-
-load_dotenv(dotenv_path=Path(__file__).parent.joinpath('.env'))
 
 db = DbHandler()
 
