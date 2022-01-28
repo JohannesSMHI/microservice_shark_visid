@@ -1,8 +1,5 @@
-connexion[swagger-ui]~=2.7.0
+connexion[swagger-ui]
 Flask
-shapely
 pandas
-geopandas
-sqlalchemy
-geoalchemy2
 requests
+python-dotenv

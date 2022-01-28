@@ -16,7 +16,9 @@ import pyproj
 
 def api_call(**kwargs):
     """Doc."""
-    url = 'http://10.122.2.206:5000/getid?timestamp={t}&longi={lo}&latit={la}'
+    url = 'http://10.122.2.240:5000/getid?timestamp={t}&east={lo}&north={la}'
+    if kwargs.get('shipc'):
+        url += '&shipc={sc}'
     return requests.request(
         "GET", url.format(**kwargs),
         headers={
@@ -62,12 +64,14 @@ if __name__ == "__main__":
         sr_x, sr_y = convert_to_sweref(lon_dd, lat_dd)
         timestamp = pd.Timestamp(' '.join((row.SDATE, row.STIME)))
         print("Timeit:--%.5f sec" % (time.time() - start_time))
-
+        start_time = time.time()
         resp = api_call(
             t=timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             lo=round(sr_x, 1),
-            la=round(sr_y, 1)
+            la=round(sr_y, 1),
+            sc=row.SHIPC
         )
+        print("API_CALL Timeit:--%.5f sec" % (time.time() - start_time))
         if resp.status_code == 200:
             data = resp.json()
             ids.append(data.get('id', ''))

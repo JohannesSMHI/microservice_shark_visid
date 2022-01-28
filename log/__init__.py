@@ -7,3 +7,4 @@ Created on 2022-01-20 15:35
 @author: johannes
 """
 from .database import DbHandler
+from .utils import *
