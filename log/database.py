@@ -6,9 +6,9 @@ Created on 2022-01-20 15:35
 
 @author: johannes
 """
-import os
 import pandas as pd
 import sqlite3
+from pathlib import Path
 
 try:
     from . import utils
@@ -16,9 +16,12 @@ except:
     import utils
 
 
+DB_PATH = Path(__file__).parent.parent.joinpath('db/visit_db.db')
+
+
 def get_connection():
     """Return a connected database instance."""
-    return sqlite3.connect(os.getenv('SHARK_VISIT_DB'))
+    return sqlite3.connect(DB_PATH)
 
 
 TS_FMT = '%Y-%m-%d %H:%M:%S'
