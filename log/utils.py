@@ -11,7 +11,7 @@ from operator import itemgetter
 
 
 def dict_factory(cursor, row):
-    """Doc."""
+    """Convert SQL-Row-object to dictionary."""
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
@@ -19,7 +19,10 @@ def dict_factory(cursor, row):
 
 
 def get_id_from_data_sweref(data, point=None):
-    """Doc."""
+    """Return list of 'year_id'(s).
+
+    Preferably only one id will be appended to the list.
+    """
     ids = []
     for p_id, r, x, y in zip(*itemgetter('year_id', 'radius', 'sweref99tm_east',
                                          'sweref99tm_north')(data)):
@@ -30,7 +33,10 @@ def get_id_from_data_sweref(data, point=None):
 
 
 def get_id_from_data_decdeg(data, point=None):
-    """Doc."""
+    """Return list of 'year_id'(s).
+
+    Preferably only one id will be appended to the list.
+    """
     ids = []
     for p_id, r, x, y in zip(*itemgetter('year_id', 'radius', 'lon_dd',
                                          'lat_dd')(data)):

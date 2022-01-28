@@ -44,6 +44,9 @@ def convert_to_sweref(*xy):
 
 
 if __name__ == "__main__":
+
+    df_fields = ['STATN', 'SDATE', 'STIME', 'LATIT', 'LONGI', 'SHIPC']
+
     directory = r'C:\Arbetsmapp\datasets\Phytoplankton'
     for fid in Path(directory).glob('**/data.txt'):
         print(fid.parent.parent)
@@ -54,7 +57,12 @@ if __name__ == "__main__":
             dtype=str,
             keep_default_na=False,
         )
-        df = df[['STATN', 'SDATE', 'STIME', 'LATIT', 'LONGI', 'SHIPC']].drop_duplicates(keep='first')
+        try:
+            df = df[df_fields].drop_duplicates()
+        except KeyError:
+            for col in df_fields:
+                if col not in df:
+                    df[col] = ''
         ids = []
         # pack_id_log = {}
         for row in df.itertuples():

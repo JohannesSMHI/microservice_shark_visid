@@ -17,8 +17,8 @@ paths:
         - $ref: '#/components/parameters/shipc'
         - $ref: '#/components/parameters/east'
         - $ref: '#/components/parameters/north'
-        - $ref: '#/components/parameters/lon_dd'
-        - $ref: '#/components/parameters/lat_dd'
+#        - $ref: '#/components/parameters/lon_dd'
+#        - $ref: '#/components/parameters/lat_dd'
       responses:
         200:
           description: Successful operation
@@ -55,13 +55,13 @@ components:
       name: north
       schema:
         type: number
-    lon_dd:
-      in: query
-      name: lon_dd
-      schema:
-        type: number
-    lat_dd:
-      in: query
-      name: lat_dd
-      schema:
-        type: number
+#    lon_dd:
+#      in: query
+#      name: lon_dd
+#      schema:
+#        type: number
+#    lat_dd:
+#      in: query
+#      name: lat_dd
+#      schema:
+#        type: number

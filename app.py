@@ -11,16 +11,30 @@ This service is intended for SMHI-NODC use.
     - The ID are based on the sampling year and a serial number (YYYY_NR).
       The serial number is simply the number in the order
       from when it was put into the database. If later a new
-      dataset id databased with visits already in this log,
+      dataset is 'databased' with visits already in this log,
       those vistis will get the ID from this log.
       If there is no match, the service will provide the visit
       with a new ID.
-    - The match consists of only timestamp and position.
-    - Each ID is put into a PostGIS database including the position
-      and a polygon based on a square buffer of 0.001 degree (~111 m).
+    - The match consists of timestamp, position and ship code.
+    - Each ID is put into a SQLite (later possibly PostGIS) database
+      including the position and a polygon based on a square buffer
+      of 2, 20, or 100 m.
+    - Using SWEREF99TM as the projected coordinate system.
 
-Examples:
-    localhost:5000/getid?timestamp=2020-03-10&longi=11.54667&latit=58.32333
+Example:
+    kwargs = dict(
+        timestamp='2019-12-09 02:10:00',
+        east=884958,
+        north=7252206,
+        shipc='77SE'
+    )
+    resp = requests.request(
+        "GET", 'http://localhost:5000/getid',
+        params=kwargs,
+        headers={
+            "Content-Type": "application/json",
+        },
+    )
 
 """
 from pathlib import Path
@@ -33,16 +47,15 @@ load_dotenv(dotenv_path=Path(__file__).parent.joinpath('.env'))
 db = DbHandler()
 
 
-def get_id(*args, timestamp=None, shipc=None, east=None, north=None,
-           lon_dd=None, lat_dd=None, **kwargs):
+def get_id(*args, timestamp=None, shipc=None, east=None, north=None, **kwargs):
     """Get function."""
     return db.get_id(
         timestamp=timestamp,
         shipc=shipc,
         east=east,
         north=north,
-        lon_dd=lon_dd,
-        lat_dd=lat_dd
+        # lon_dd=lon_dd,
+        # lat_dd=lat_dd
     )
 
 

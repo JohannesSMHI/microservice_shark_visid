@@ -3,5 +3,3 @@ Flask
 pandas
 requests
 python-dotenv
-numpy
-pyproj

@@ -13,11 +13,9 @@ import pyproj
 
 def api_call(**kwargs):
     """Doc."""
-    url = 'http://10.122.2.240:5000/getid?timestamp={t}&east={lo}&north={la}'
-    if kwargs.get('shipc'):
-        url += '&shipc={sc}'
     return requests.request(
-        "GET", url.format(**kwargs),
+        "GET", 'http://10.122.2.148:5000/getid',
+        params=kwargs,
         headers={
             "Content-Type": "application/json",
         },
@@ -41,7 +39,7 @@ def convert_to_sweref(*xy):
 
 
 if __name__ == "__main__":
-    directory = r'C:\PhysicalChemical\2020'
+    directory = r'C:\PhysicalChemical\2019'
     for fid in Path(directory).glob('**/data.txt'):
         print(fid.parent.parent)
         df = pd.read_csv(
@@ -51,7 +49,8 @@ if __name__ == "__main__":
             dtype=str,
             keep_default_na=False,
         )
-        df = df[['SDATE', 'STIME', 'LATIT', 'LONGI', 'SHIPC']].drop_duplicates(keep='first')
+        df = df[['STATN', 'SDATE', 'STIME',
+                 'LATIT', 'LONGI', 'SHIPC']].drop_duplicates()
         ids = []
         # pack_id_log = {}
         for row in df.itertuples():
@@ -60,17 +59,19 @@ if __name__ == "__main__":
             sr_x, sr_y = convert_to_sweref(lon_dd, lat_dd)
             timestamp = pd.Timestamp(' '.join((row.SDATE, row.STIME)))
             resp = api_call(
-                t=timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-                lo=round(sr_x, 1),
-                la=round(sr_y, 1),
-                sc=row.SHIPC
+                timestamp=timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                east=round(sr_x, 1),
+                north=round(sr_y, 1),
+                shipc=row.SHIPC
             )
             if resp.status_code == 200:
                 data = resp.json()
                 ids.append(data.get('id', ''))
                 if 'id' not in data:
-                    print(data, row.STATN, row.SDATE)
+                    print(data, row.STATN, row.SDATE, row.STIME)
             else:
-                print('ERROR', row.STATN, row.SDATE)
+                print('ERROR', row.STATN, row.SDATE, row.STIME)
                 ids.append('')
-        df['visit_id'] = ids
+        break
+
+        # df['visit_id'] = ids

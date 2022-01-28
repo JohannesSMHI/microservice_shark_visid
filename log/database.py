@@ -6,6 +6,7 @@ Created on 2022-01-20 15:35
 
 @author: johannes
 """
+import os
 import pandas as pd
 import sqlite3
 
@@ -16,9 +17,8 @@ except:
 
 
 def get_connection():
-    """Doc."""
-    return sqlite3.connect("C:/Temp/DV/visit_id_db/visit_db.db")
-    # return sqlite3.connect(os.getenv('SHARK_VISIT_DB'))
+    """Return a connected database instance."""
+    return sqlite3.connect(os.getenv('SHARK_VISIT_DB'))
 
 
 TS_FMT = '%Y-%m-%d %H:%M:%S'
@@ -26,7 +26,7 @@ TIME_DELTA = pd.Timedelta(hours=6)
 
 
 def get_start_end_timestamps(ts):
-    """Doc."""
+    """Return start and end of a specific time window."""
     if ts.endswith(' 00:00:00'):
         ts = pd.Timestamp(ts)
         return (ts - TIME_DELTA).strftime(TS_FMT), \
@@ -38,7 +38,7 @@ def get_start_end_timestamps(ts):
 
 
 def get_dict(query):
-    """Doc."""
+    """Return dictionary of the SQL query."""
     conn = get_connection()
     conn.row_factory = utils.dict_factory
     cur = conn.cursor()
@@ -51,7 +51,10 @@ def get_dict(query):
 
 
 class DbHandler:
-    """PostGIS database handler."""
+    """SQLite database handler.
+
+    Perhaps we´ll be using PostGIS instead of SQLite later on..
+    """
 
     _query = """
     select * from ids 
@@ -63,16 +66,12 @@ class DbHandler:
     and shipc = {shipcode}
     """
 
-    def __init__(self, postgis=False):
-        self.postgis = postgis
-        self.engine = None
-
     def get_id(self, timestamp=None, east=None, north=None,
                lon_dd=None, lat_dd=None, shipc=None):
-        """Doc."""
+        """Return dictionary with id and info."""
         start, end = get_start_end_timestamps(timestamp)
         if shipc:
-            data = get_dict(self._query.format(
+            data = get_dict(self._query_incl_ship.format(
                 start="""'{}'""".format(start), end="""'{}'""".format(end),
                 shipcode="""'{}'""".format(shipc))
             )
@@ -80,26 +79,28 @@ class DbHandler:
             data = get_dict(self._query.format(
                 start="""'{}'""".format(start), end="""'{}'""".format(end))
             )
+
+        visit_ids = []
         if data:
             if east:
-                ids = utils.get_id_from_data_sweref(
+                visit_ids = utils.get_id_from_data_sweref(
                     data, point=(east, north)
                 )
             elif lon_dd:
-                ids = utils.get_id_from_data_decdeg(
-                    data,
-                    point=(lon_dd, lat_dd)
+                visit_ids = utils.get_id_from_data_decdeg(
+                    data, point=(lon_dd, lat_dd)
                 )
-        else:
-            ids = []
 
-        if len(ids) == 1:
-            return {'id': ids[0]}
-        elif len(ids) == 0:
-            return {'info': 'No match'}
+        if len(visit_ids) == 1:
+            return {'id': visit_ids[0],
+                    'info': 'success'}
+        elif len(visit_ids) == 0:
+            return {'id': None,
+                    'info': 'No match'}
         else:
             # TODO: refine handling and match with closest time?
-            return {'info': 'Multiple matches'}
+            return {'id': visit_ids,
+                    'info': 'Multiple matches'}
 
     def post_id(self):
         """Doc."""
@@ -116,9 +117,9 @@ if __name__ == "__main__":
     start_time = time.time()
 
     ids = db.get_id(
-        timestamp='2019-02-14 12:10:10',
-        east=474149,
-        north=6211426,
-        shipc='7798'
+        timestamp='2019-12-09 02:10:00',
+        east=884958,
+        north=7252206,
+        shipc='77SE'
     )
     print("Timeit:--%.5f sec" % (time.time() - start_time))
