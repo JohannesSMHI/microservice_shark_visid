@@ -11,9 +11,9 @@ import requests
 
 def api_call(**kwargs):
     """Doc."""
-    url = 'http://10.122.2.206:5000/getid?timestamp={t}&longi={lo}&latit={la}'
     return requests.request(
-        "GET", url.format(**kwargs),
+        "GET", 'http://10.122.2.206:5000/getid/',
+        params=kwargs,
         headers={
             "Content-Type": "application/json",
         },
@@ -21,6 +21,11 @@ def api_call(**kwargs):
 
 
 if __name__ == "__main__":
-    resp = api_call(t='2020-03-10', lo=11.54667, la=58.32333)
+    resp = api_call(
+        timestamp='2019-12-09 02:10:00',
+        east=884958,
+        north=7252206,
+        shipc='77SE'
+    )
     print(resp.status_code)
     print(resp.json())
