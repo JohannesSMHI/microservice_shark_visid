@@ -21,7 +21,7 @@ DB_PATH = Path(__file__).parent.parent.joinpath('db/visit_db.db')
 
 def get_connection():
     """Return a connected database instance."""
-    return sqlite3.connect(DB_PATH)
+    return sqlite3.connect(str(DB_PATH))
 
 
 TS_FMT = '%Y-%m-%d %H:%M:%S'
