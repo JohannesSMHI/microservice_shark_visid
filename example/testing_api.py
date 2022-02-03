@@ -12,7 +12,7 @@ import requests
 def api_call(**kwargs):
     """Doc."""
     return requests.request(
-        "GET", 'http://10.122.2.206:5000/getid/',
+        "GET", '....../shark_visid/getid',
         params=kwargs,
         headers={
             "Content-Type": "application/json",

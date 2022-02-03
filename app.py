@@ -44,7 +44,10 @@ db = DbHandler()
 
 
 def get_id(*args, timestamp=None, shipc=None, east=None, north=None, **kwargs):
-    """Get function."""
+    """Get id function.
+
+    As of now, we only accept SWEREF99TM.
+    """
     return db.get_id(
         timestamp=timestamp,
         shipc=shipc,
