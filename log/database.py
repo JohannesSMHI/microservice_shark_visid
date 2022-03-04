@@ -59,11 +59,11 @@ class DbHandler:
     """
 
     _query = """
-    select * from ids 
+    select * from ids
     where timestamp between {start} and {end}
     """
     _query_incl_ship = """
-    select * from ids 
+    select * from ids
     where timestamp between {start} and {end}
     and shipc = {shipcode}
     """

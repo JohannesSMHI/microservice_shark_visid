@@ -70,8 +70,10 @@ def distance_between_points_decdeg(x1, x2, y1, y2):
     theta1 = x1 * degrees_to_radians
     theta2 = x2 * degrees_to_radians
 
-    cos = (math.sin(phi1) * math.sin(phi2) * math.cos(theta1 - theta2) +
-           math.cos(phi1) * math.cos(phi2))
+    cos = (
+            math.sin(phi1) * math.sin(phi2) * math.cos(theta1 - theta2)
+            + math.cos(phi1) * math.cos(phi2)
+    )
 
     # 6371 ~ radius of the earth (km) * 1000 m
     distance = math.acos(cos) * 6371. * 1000.
