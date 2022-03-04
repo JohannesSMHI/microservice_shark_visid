@@ -67,8 +67,8 @@ def distance_between_points_decdeg(x1, x2, y1, y2):
     p2 = (90.0 - y2) * degrees_to_radians
     tdelta = x1 * degrees_to_radians - x2 * degrees_to_radians
     cos = (
-        math.sin(p1) * math.sin(p2) * math.cos(tdelta)  # noqa: E127
-        + math.cos(p1) * math.cos(p2)  # noqa: E127
+        math.sin(p1) * math.sin(p2) * math.cos(tdelta)  # noqa: W503
+        + math.cos(p1) * math.cos(p2)  # noqa: W503
     )
 
     # 6371 ~ radius of the earth (km) * 1000 m
