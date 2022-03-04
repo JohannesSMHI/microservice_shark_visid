@@ -12,9 +12,8 @@ from pathlib import Path
 
 try:
     from . import utils
-except:
+except BaseException:
     import utils
-
 
 DB_PATH = Path(__file__).parent.parent.joinpath('db/visit_db.db')
 

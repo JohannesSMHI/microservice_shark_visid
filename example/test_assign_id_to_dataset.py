@@ -10,12 +10,11 @@ import time
 import requests
 import numpy as np
 import pandas as pd
-from pathlib import Path
 import pyproj
 
 
 def api_call(**kwargs):
-    """Doc."""
+    """Return API response."""
     url = 'http://10.122.2.240:5000/getid?timestamp={t}&east={lo}&north={la}'
     if kwargs.get('shipc'):
         url += '&shipc={sc}'
@@ -38,14 +37,14 @@ def decmin_to_decdeg(pos):
 
 
 def convert_to_sweref(*xy):
-    """Doc."""
+    """Convert wgs84 to sweref99tm coordinates."""
     proj = pyproj.Transformer.from_crs(4326, 3006, always_xy=True)
     return proj.transform(*xy)
 
 
 if __name__ == "__main__":
     # resp = api_call(t='2020-03-10', lo=11.54667, la=58.32333)
-    data_path = r'C:\Arbetsmapp\datasets\Chlorophyll\SHARK_Chlorophyll_2018_ALCON_MSVVF\processed_data\data.txt'
+    data_path = r'...SHARK_Chlorophyll_2018_ALCON_MSVVF\processed_data\data.txt'
     # get_id_to_dataset(data_path)
     df = pd.read_csv(
         data_path,
@@ -56,7 +55,6 @@ if __name__ == "__main__":
     )
     start_time = time.time()
     ids = []
-    # pack_id_log = {}
     for row in df.itertuples():
         start_time = time.time()
         lat_dd = decmin_to_decdeg(row.LATIT.replace(',', '.'))

@@ -47,7 +47,10 @@ def get_id_from_data_decdeg(data, point=None):
 
 
 def distance_between_points_meters(x1, x2, y1, y2):
-    """Distance between two points."""
+    """Distance between two points.
+
+    Example of coordinate reference system in meters: SWEREF99TM
+    """
     return (((x2 - x1) ** 2) + ((y2 - y1) ** 2)) ** 0.5
 
 
@@ -55,7 +58,6 @@ def distance_between_points_decdeg(x1, x2, y1, y2):
     """Distance between two positions.
 
     Args in decimal degrees, eg. (N)58.4561, (E)21.6548
-
     http://www.johndcook.com/blog/python_longitude_latitude/
     """
     if y1 == y2 and x1 == x2:

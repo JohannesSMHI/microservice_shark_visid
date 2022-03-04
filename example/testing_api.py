@@ -10,9 +10,9 @@ import requests
 
 
 def api_call(**kwargs):
-    """Doc."""
+    """Return API response."""
     return requests.request(
-        "GET", '....../shark_visid/getid',
+        "GET", '.........../shark_visid/getid',
         params=kwargs,
         headers={
             "Content-Type": "application/json",

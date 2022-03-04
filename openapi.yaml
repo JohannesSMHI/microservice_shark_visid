@@ -34,27 +34,40 @@ components:
   schemas:
     SharkId:
       type: object
+      properties:
+        id:
+          type: string
+          example: 2022_156
+        info:
+          type: string
+          example: success
   parameters:
     timestamp:
       in: query
       name: timestamp
       schema:
         type: string
+        example: 2022-01-15 16:35
     shipc:
       in: query
       name: shipc
       schema:
         type: string
+        example: 77SE
     east:
       in: query
       name: east
       schema:
         type: number
+        format: float
+        example: 314572.34
     north:
       in: query
       name: north
       schema:
         type: number
+        format: float
+        example: 6397858.356
 #    lon_dd:
 #      in: query
 #      name: lon_dd

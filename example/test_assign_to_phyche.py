@@ -12,7 +12,7 @@ import pyproj
 
 
 def api_call(**kwargs):
-    """Doc."""
+    """Return API response."""
     return requests.request(
         "GET", 'http://10.122.2.148:5000/getid',
         params=kwargs,
@@ -33,7 +33,7 @@ def decmin_to_decdeg(pos):
 
 
 def convert_to_sweref(*xy):
-    """Doc."""
+    """Convert wgs84 to sweref99tm coordinates."""
     proj = pyproj.Transformer.from_crs(4326, 3006, always_xy=True)
     return proj.transform(*xy)
 
