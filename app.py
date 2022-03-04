@@ -2,8 +2,7 @@
 # Copyright (c) 2022 SMHI, Swedish Meteorological and Hydrological Institute.
 # License: MIT License (see LICENSE.txt or http://opensource.org/licenses/mit).
 """
-Microservice Template:
-- https://github.com/shark-microservices/microservice_template
+Microservice Template: https://github.com/shark-microservices/microservice_template
 
 This service is intended for SMHI-NODC use.
     - It keeps track on visit IDs across datatypes.
@@ -36,7 +35,7 @@ Example:
             "Content-Type": "application/json",
         },
     )
-"""
+"""  # noqa: E501
 import connexion
 from log import DbHandler
 

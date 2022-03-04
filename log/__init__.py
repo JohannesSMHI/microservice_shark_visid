@@ -8,9 +8,9 @@ Created on 2022-01-20 15:35
 """
 from .database import DbHandler  # noqa: F401
 from .utils import (
-    dict_factory,  # noqa: F401
-    get_id_from_data_sweref,  # noqa: F401
-    get_id_from_data_decdeg,  # noqa: F401
-    distance_between_points_decdeg,  # noqa: F401
-    distance_between_points_meters  # noqa: F401
-)
+    dict_factory,
+    get_id_from_data_sweref,
+    get_id_from_data_decdeg,
+    distance_between_points_decdeg,
+    distance_between_points_meters
+)  # noqa: F401
