@@ -11,8 +11,8 @@ This service is intended for SMHI-NODC use.
     - The ID are based on the sampling year and a serial number (YYYY_NR).
       The serial number is simply the number in the order
       from when it was put into the database. If later a new
-      dataset is 'databased' with visits already in this log,
-      those vistis will get the ID from this log.
+      dataset is 'databased' with visits already in this handler,
+      those vistis will get the ID from this handler.
       If there is no match, the service will provide the visit
       with a new ID.
     - The match consists of timestamp, position and ship code.
@@ -23,10 +23,8 @@ This service is intended for SMHI-NODC use.
 
 Example:
     kwargs = dict(
-        timestamp='2019-12-09 02:10:00',
-        east=884958,
-        north=7252206,
-        shipc='77SE'
+        timestamp='2022-01-10 10:30:00',
+        reg_id=135298
     )
     resp = requests.request(
         "GET", 'http://localhost:5000/getid',
@@ -36,31 +34,46 @@ Example:
         },
     )
 """  # noqa: E501
-import connexion
-from log import DbHandler
-
-db = DbHandler()
-
-
-def get_id(*args, timestamp=None, shipc=None, east=None, north=None, **kwargs):
-    """Get id function.
-
-    As of now, we only accept SWEREF99TM.
-    """
-    return db.get_id(
-        timestamp=timestamp,
-        shipc=shipc,
-        east=east,
-        north=north,
-    )
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import PlainTextResponse
+from routes.api import router as api_router
+from src.models import ModelDoesNotExists
 
 
-app = connexion.FlaskApp(
-    __name__,
-    specification_dir='./',
-    options={'swagger_url': '/'},
+app = FastAPI()
+
+origins = ['http://localhost:8010']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=['GET'],
+    allow_headers=['*'],
 )
-app.add_api('openapi.yaml')
 
-if __name__ == "__main__":
-    app.run(port=5000)
+app.include_router(api_router)
+
+
+@app.exception_handler(ModelDoesNotExists)
+async def model_exception_handler(request, exc):
+    """Override exceptions."""
+    return PlainTextResponse(str(exc), status_code=404)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    """Override exceptions."""
+    return PlainTextResponse(str(exc), status_code=400)
+
+
+if __name__ == '__main__':
+    uvicorn.run(
+        'app:app',
+        host='127.0.0.1',
+        port=8010,
+        log_level='info',
+        reload=True
+    )

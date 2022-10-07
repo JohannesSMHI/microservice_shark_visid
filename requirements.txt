@@ -1,5 +1,10 @@
-connexion[swagger-ui]
-Flask
 pandas
 requests
 python-dotenv
+jinja2
+numpy
+pyproj
+setuptools
+pydantic
+fastapi
+uvicorn

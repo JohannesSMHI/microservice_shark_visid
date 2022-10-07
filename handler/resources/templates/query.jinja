@@ -1,0 +1,20 @@
+select *
+from
+    {{table}}
+where
+    1=1
+    {% if between_params %}
+        {% for key, values in between_params.items() %}
+            and {{key}} between {{ "'" + values[0] + "'" }} and {{ "'" + values[1] + "'" }}
+        {% endfor %}
+    {% endif %}
+    {% if in_list_params %}
+        {% for key, list in in_list_params.items() %}
+            and {{key}} in ( {{ "'" + "','".join(list) + "'" }} )
+        {% endfor %}
+    {% endif %}
+    {% if equal_params %}
+        {% for key, value in equal_params.items() %}
+            and {{key}} = {{value}}
+        {% endfor %}
+    {% endif %}
