@@ -8,7 +8,7 @@ Created on 2022-10-07 14:52
 """
 import pandas as pd
 from pydantic import BaseModel, Field, validator
-from typing import Union
+from typing import Union, List
 from handler import DbHandler
 from .exceptions import ModelDoesNotExists
 
@@ -49,24 +49,37 @@ class SingleIdModel(BaseModel):
 
 
 class MultiIdModel(BaseModel):
-    reg_id_list: int = Field(
-        default=135298,
-        title='REG_ID',
-        description='Id for a given sampling site - "Provplats ID"'
+    reg_id_list: List[int] = Field(
+        default=[135298],
+        title='REG_ID list',
+        description='Ids for a list of sampling sites - "Provplats ID"'
     )
-    timestamp_list: str = Field(
-        default='2022-01-10 10:30:00',
-        title='Timestamp',
-        description='Date and time together in the format Y-m-d H:M:S'
+    timestamp_list: List[str] = Field(
+        default=['2022-01-10 10:30:00'],
+        title='Timestamp list',
+        description='Dates and times together in the format Y-m-d H:M:S'
+    )
+    visit_id_list: Union[List[str], List[None], None] = Field(
+        default=[None],
+        title='Visit-ID list',
+        description='Visit IDs for a given list of sampling event.'
     )
     _name = 'MultiIdModel'
 
-    # @validator('reg_id_list', pre=True)
-    # def validate_attribute_list(cls, value):
-    #     if value:
-    #         return db_handler.get_dictionary(attribute_list=value)
-    #     else:
-    #         raise ModelDoesNotExists(
-    #             cls._name,
-    #             detail='Could not return any visit-ids'
-    #         )
+    @validator('timestamp_list', 'reg_id_list', pre=True)
+    def validate_lists(cls, value):
+        if type(value) == list:
+            return value
+        else:
+            return None
+
+    def update_visit_id_list(self):
+        value = db_handler.get_id_list(
+            reg_id_list=self.reg_id_list, timestamp_list=self.timestamp_list)
+        if value:
+            self.visit_id_list = value
+        else:
+            raise ModelDoesNotExists(
+                self._name,
+                detail='Could not return a list o visit-ids'
+            )

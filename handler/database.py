@@ -89,9 +89,9 @@ def loop_visits(db_data, timestamp_list=None, reg_id_list=None):
         elif reg_id in id_set:
             id_indices = db_data['reg_id'] == reg_id
             idx = nearest_ind(db_data['ts'][id_indices], ts)
-            validation = validate_timestamp(
+            validation_pass = validate_timestamp(
                 ts, db_data['ts'][id_indices][idx])
-            if validation:
+            if validation_pass:
                 vis_index = np.logical_and(
                     db_data['ts'] == db_data['ts'][id_indices][idx],
                     id_indices
