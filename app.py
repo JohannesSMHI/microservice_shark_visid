@@ -27,7 +27,7 @@ Example:
         reg_id=135298
     )
     resp = requests.request(
-        "GET", 'http://localhost:5000/getid',
+        "GET", 'http://localhost:5000/visit-id',
         params=kwargs,
         headers={
             "Content-Type": "application/json",
