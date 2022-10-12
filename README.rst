@@ -7,9 +7,8 @@ SHARK visID - microservice
 
 Developed by Shd at SMHI.
 
-- Python based service using Flask
+- Python based service using FastAPI
 - Get ID for visit based on timestamp and position
-- `Microservice Template <https://github.com/shark-microservices/microservice_template>`_
 
 
 💻 Installation - Getting started
